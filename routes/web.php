@@ -1,10 +1,11 @@
 <?php
 
 use App\Livewire\Registro;
-use Illuminate\Support\Facades\Route;
 use App\Models\Participante;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Route;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\Storage;
 
 // Route::get('/', function () {
 //     return view('registro');
@@ -78,3 +79,22 @@ Route::get('/acuse/{acuse_token}', function ($acuse_token) {
         'acuse-' . $participante->folio . '.pdf'
     );
 });
+
+Route::get('/admin/documento/{participante}/{tipo}', function (Participante $participante, $tipo) {
+
+    abort_unless(in_array($tipo, ['ine', 'voucher']), 404);
+
+    $path = $tipo === 'ine'
+        ? $participante->ine_path
+        : $participante->voucher_path;
+
+    abort_unless($path && Storage::disk('local')->exists($path), 404);
+
+    return response()->file(
+        Storage::disk('local')->path($path)
+    );
+
+})->middleware([
+    \Filament\Http\Middleware\Authenticate::class,
+    'signed',
+])->name('admin.documento');

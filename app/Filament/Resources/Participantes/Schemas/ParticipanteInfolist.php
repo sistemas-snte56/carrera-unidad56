@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Participantes\Schemas;
 
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\URL;
 
 class ParticipanteInfolist
 {
@@ -28,8 +29,29 @@ class ParticipanteInfolist
                     ->placeholder('-'),
                 TextEntry::make('correo'),
                 TextEntry::make('telefono'),
-                TextEntry::make('ine_path'),
-                TextEntry::make('voucher_path'),
+                TextEntry::make('ine_path')
+                    ->label('INE o credencial')
+                    ->url(fn($record) => URL::temporarySignedRoute(
+                        'admin.documento',
+                        now()->addMinutes(10),
+                        [
+                            'participante' => $record->id,
+                            'tipo' => 'ine',
+                        ]
+                    ))
+                    ->openUrlInNewTab(),
+
+                TextEntry::make('voucher_path')
+                    ->label('Comprobante de pago')
+                    ->url(fn($record) => URL::temporarySignedRoute(
+                        'admin.documento',
+                        now()->addMinutes(10),
+                        [
+                            'participante' => $record->id,
+                            'tipo' => 'voucher',
+                        ]
+                    ))
+                    ->openUrlInNewTab(),
                 TextEntry::make('estatus'),
                 TextEntry::make('created_at')
                     ->dateTime()
