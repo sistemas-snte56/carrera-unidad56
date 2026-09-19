@@ -12,9 +12,11 @@ use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\Storage;
+// use Illuminate\Support\Facades\Storage;
 
 use Illuminate\Support\Facades\URL;
+use App\Filament\Exports\ParticipanteExporter;
+use Filament\Actions\ExportAction;
 
 
 class ParticipantesTable
@@ -55,7 +57,8 @@ class ParticipantesTable
                 TextColumn::make('fecha_nacimiento')
                     ->label('Fecha nacimiento')
                     ->date()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('rama')
                     ->label('Rama')
@@ -63,6 +66,7 @@ class ParticipantesTable
 
                 TextColumn::make('distancia')
                     ->label('Distancia')
+                    ->sortable()
                     ->searchable(),
 
                 TextColumn::make('tipo_corredor')
@@ -149,6 +153,12 @@ class ParticipantesTable
             ])
 
             ->toolbarActions([
+
+                ExportAction::make('exportar')
+                    ->label('Exportar participantes')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->exporter(ParticipanteExporter::class),
+                    
                 BulkActionGroup::make([
                     BulkAction::make('cambiarEstatus')
                         ->label('Cambiar estatus')
@@ -174,6 +184,9 @@ class ParticipantesTable
 
                     DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            // Mostrar 50 registros inicialmente
+            ->paginated([10, 25, 50, 100])
+            ->defaultPaginationPageOption(50);
     }
 }

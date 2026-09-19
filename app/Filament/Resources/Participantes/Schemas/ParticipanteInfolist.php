@@ -24,11 +24,14 @@ class ParticipanteInfolist
                 TextEntry::make('rama'),
                 TextEntry::make('distancia'),
                 TextEntry::make('tipo_corredor'),
-                TextEntry::make('delegacion.id')
+                TextEntry::make('delegacion.delegacion_completa')
                     ->label('Delegacion')
                     ->placeholder('-'),
                 TextEntry::make('correo'),
                 TextEntry::make('telefono'),
+                TextEntry::make('acuse_token')
+                    ->label('Token de acuse')
+                    ->placeholder('-'),
                 TextEntry::make('ine_path')
                     ->label('INE o credencial')
                     ->url(fn($record) => URL::temporarySignedRoute(
