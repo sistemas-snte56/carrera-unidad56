@@ -28,12 +28,14 @@ class ParticipantesTable
                 TextColumn::make('folio')
                     ->label('Folio')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('numero_corredor')
                     ->label('Número')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('nombre_completo')
                     ->label('Nombre completo')
@@ -62,7 +64,8 @@ class ParticipantesTable
 
                 TextColumn::make('rama')
                     ->label('Rama')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('distancia')
                     ->label('Distancia')
@@ -80,7 +83,8 @@ class ParticipantesTable
 
                 TextColumn::make('correo')
                     ->label('Correo')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('telefono')
                     ->label('Teléfono')
@@ -117,34 +121,34 @@ class ParticipantesTable
             ])
 
             ->recordActions([
-                ActionGroup::make([
-                    Action::make('ine')
-                        ->label('Ver INE')
-                        ->icon('heroicon-o-identification')
-                        ->url(fn ($record) => URL::temporarySignedRoute(
-                            'admin.documento',
-                            now()->addMinutes(10),
-                            [
-                                'participante' => $record->id,
-                                'tipo' => 'ine',
-                            ]
-                        ))
-                        ->openUrlInNewTab()
-                        ->visible(fn ($record) => filled($record->ine_path)),
+                Action::make('ine')
+                    ->label('Ver INE')
+                    ->icon('heroicon-o-identification')
+                    ->url(fn ($record) => URL::temporarySignedRoute(
+                        'admin.documento',
+                        now()->addMinutes(10),
+                        [
+                            'participante' => $record->id,
+                            'tipo' => 'ine',
+                        ]
+                    ))
+                    ->openUrlInNewTab()
+                    ->visible(fn ($record) => filled($record->ine_path)),
 
-                    Action::make('voucher')
-                        ->label('Ver Voucher')
-                        ->icon('heroicon-o-document-text')
-                        ->url(fn ($record) => URL::temporarySignedRoute(
-                            'admin.documento',
-                            now()->addMinutes(10),
-                            [
-                                'participante' => $record->id,
-                                'tipo' => 'voucher',
-                            ]
-                        ))
-                        ->openUrlInNewTab()
-                        ->visible(fn ($record) => filled($record->voucher_path)),
+                Action::make('voucher')
+                    ->label('Ver Voucher')
+                    ->icon('heroicon-o-document-text')
+                    ->url(fn ($record) => URL::temporarySignedRoute(
+                        'admin.documento',
+                        now()->addMinutes(10),
+                        [
+                            'participante' => $record->id,
+                            'tipo' => 'voucher',
+                        ]
+                    ))
+                    ->openUrlInNewTab()
+                    ->visible(fn ($record) => filled($record->voucher_path)),
+                ActionGroup::make([
                     ViewAction::make(),
                     EditAction::make(),
                 ])
