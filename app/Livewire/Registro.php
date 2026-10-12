@@ -197,6 +197,6 @@ class Registro extends Component
 
     public function render()
     {
-        return view('livewire.registro');
+        return view('livewire.cerrado');
     }
 }
